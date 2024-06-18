@@ -13,16 +13,6 @@ type T struct {
 	*errorsmod.Error
 }
 
-// use this function only during a program startup phase.
-func registerAndWrap(code uint32, err error) T {
-	var gErr gerr.Error
-	if !errors.As(err, &gErr) {
-		panic("errs as gerr")
-	}
-	sdkerr := errorsmod.RegisterWithGRPCCode(DefaultCodespace, code, gErr.GrpcCode(), err.Error())
-	return T{sdkerr}
-}
-
 var (
 	ErrCancelled          = registerAndWrap(0, gerr.ErrCancelled)
 	ErrUnknown            = registerAndWrap(1, gerr.ErrUnknown)
@@ -41,3 +31,13 @@ var (
 	ErrUnavailable        = registerAndWrap(14, gerr.ErrUnavailable)
 	ErrDataLoss           = registerAndWrap(15, gerr.ErrDataLoss)
 )
+
+// use this function only during a program startup phase.
+func registerAndWrap(code uint32, err error) T {
+	var gErr gerr.Error
+	if !errors.As(err, &gErr) {
+		panic("errs as gerr")
+	}
+	sdkerr := errorsmod.RegisterWithGRPCCode(DefaultCodespace, code, gErr.GrpcCode(), err.Error())
+	return T{sdkerr}
+}
