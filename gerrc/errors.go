@@ -9,8 +9,14 @@ import (
 
 var DefaultCodespace = "gerrc"
 
+var _ error = T{}
+
 type T struct {
-	*errorsmod.Error
+	inner *errorsmod.Error
+}
+
+func (t T) Error() string {
+	return t.inner.Error()
 }
 
 var (

@@ -4,7 +4,7 @@ go 1.22.4
 
 require (
 	cosmossdk.io/errors v1.0.1
-	github.com/danwt/gerr v0.1.0
+	github.com/danwt/gerr v0.1.1
 	google.golang.org/grpc v1.64.0
 )
 
