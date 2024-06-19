@@ -9,14 +9,13 @@ import (
 
 var DefaultCodespace = "gerrc"
 
-var _ error = T{}
+var _ error = Error{}
 
-type T struct {
-	inner *errorsmod.Error
-}
+// necessary to make Error() pass through to the underlying impl
+type alias = errorsmod.Error
 
-func (t T) Error() string {
-	return t.inner.Error()
+type Error struct {
+	*alias
 }
 
 var (
@@ -39,11 +38,11 @@ var (
 )
 
 // use this function only during a program startup phase.
-func registerAndWrap(code uint32, err error) T {
+func registerAndWrap(code uint32, err error) Error {
 	var gErr gerr.Error
 	if !errors.As(err, &gErr) {
 		panic("errs as gerr")
 	}
 	sdkerr := errorsmod.RegisterWithGRPCCode(DefaultCodespace, code, gErr.GrpcCode(), err.Error())
-	return T{sdkerr}
+	return Error{sdkerr}
 }
