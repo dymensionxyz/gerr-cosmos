@@ -7,15 +7,17 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-func TestBasics(t *testing.T) {
-	threeArbitraryErrors := []error{
-		ErrCancelled,
-		ErrUnknown,
-		ErrInvalidArgument,
-	}
+var threeArbitraryErrors = []error{
+	ErrCancelled,
+	ErrUnknown,
+	ErrInvalidArgument,
+}
 
+func TestBasics(t *testing.T) {
 	t.Run("stdlib wrapping", func(t *testing.T) {
 		require.True(t, errors.Is(fmt.Errorf("foo: %w", fmt.Errorf("bar: %w", threeArbitraryErrors[0])), threeArbitraryErrors[0]))
 		require.True(t, errorsmod.IsOf(fmt.Errorf("foo: %w", fmt.Errorf("bar: %w", threeArbitraryErrors[0])), threeArbitraryErrors[0]))
@@ -49,5 +51,13 @@ func TestBasics(t *testing.T) {
 		require.True(t, errorsmod.IsOf(err2, threeArbitraryErrors[0]))
 		require.True(t, errorsmod.IsOf(err2, threeArbitraryErrors[1]))
 		require.True(t, errorsmod.IsOf(err2, threeArbitraryErrors[2]))
+	})
+}
+
+func TestCompatibleWithGoogleStatusLib(t *testing.T) {
+	t.Run("FromError", func(t *testing.T) {
+		s, ok := status.FromError(ErrCancelled)
+		require.True(t, ok)
+		require.Equal(t, s.Code(), codes.Canceled)
 	})
 }

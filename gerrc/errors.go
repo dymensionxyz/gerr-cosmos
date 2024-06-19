@@ -19,6 +19,10 @@ type Error struct {
 }
 
 var (
+	/*
+		Google errors
+	*/
+
 	ErrCancelled          = registerAndWrap(0, gerr.ErrCancelled)
 	ErrUnknown            = registerAndWrap(1, gerr.ErrUnknown)
 	ErrInvalidArgument    = registerAndWrap(2, gerr.ErrInvalidArgument)
@@ -35,6 +39,13 @@ var (
 	ErrInternal           = registerAndWrap(13, gerr.ErrInternal)
 	ErrUnavailable        = registerAndWrap(14, gerr.ErrUnavailable)
 	ErrDataLoss           = registerAndWrap(15, gerr.ErrDataLoss)
+
+	/*
+		Blockchain errors
+	*/
+
+	// ErrFault is a failed precondition error for malicious actor faults or frauds.
+	ErrFault = errorsmod.Wrap(ErrFailedPrecondition, "fraud or fault")
 )
 
 // use this function only during a program startup phase.

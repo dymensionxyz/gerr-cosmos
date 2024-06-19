@@ -4,8 +4,8 @@ go 1.22.4
 
 require (
 	cosmossdk.io/errors v1.0.1
-	github.com/danwt/gerr v0.1.1
-	github.com/stretchr/testify v1.8.4
+	github.com/danwt/gerr v0.1.5
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
@@ -19,5 +19,3 @@ require (
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/danwt/gerr => /Users/danwt/Documents/repos/gerr
