@@ -54,6 +54,20 @@ func TestBasics(t *testing.T) {
 	})
 }
 
+func TestBothWrapsWorkTheSame(t *testing.T) {
+	err := ErrCancelled
+
+	function := errorsmod.Wrap(err, "foo")
+	require.True(t, errorsmod.IsOf(function, err))
+	function = errorsmod.Wrapf(err, "foo")
+	require.True(t, errorsmod.IsOf(function, err))
+
+	method := err.Wrap("foo")
+	require.True(t, errorsmod.IsOf(method, err))
+	method = err.Wrapf("foo")
+	require.True(t, errorsmod.IsOf(method, err))
+}
+
 func TestCompatibleWithGoogleStatusLib(t *testing.T) {
 	t.Run("FromError", func(t *testing.T) {
 		s, ok := status.FromError(ErrCancelled)
