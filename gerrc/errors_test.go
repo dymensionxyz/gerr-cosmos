@@ -57,22 +57,15 @@ func TestBasics(t *testing.T) {
 func TestBothWrapsWorkTheSame(t *testing.T) {
 	err := ErrCancelled
 
-	wrappedBuggy := err.Wrap("foo")
-	require.True(t, errorsmod.IsOf(wrappedBuggy, err))
+	function := errorsmod.Wrap(err, "foo")
+	require.True(t, errorsmod.IsOf(function, err))
+	function = errorsmod.Wrapf(err, "foo")
+	require.True(t, errorsmod.IsOf(function, err))
 
-	wrappedOk := errorsmod.Wrap(err, "foo")
-	require.True(t, errorsmod.IsOf(wrappedOk, err))
-}
-
-// This test demonstrates that the SDK errors .Wrap method is buggy
-func TestSDKBuggyWrap(t *testing.T) {
-	err := errorsmod.Register("foo", 0, "foo")
-
-	wrappedBuggy := err.Wrap("foo")
-	require.True(t, errorsmod.IsOf(wrappedBuggy, err))
-
-	wrappedOk := errorsmod.Wrap(err, "foo")
-	require.True(t, errorsmod.IsOf(wrappedOk, err))
+	method := err.Wrap("foo")
+	require.True(t, errorsmod.IsOf(method, err))
+	method = err.Wrapf("foo")
+	require.True(t, errorsmod.IsOf(method, err))
 }
 
 func TestCompatibleWithGoogleStatusLib(t *testing.T) {

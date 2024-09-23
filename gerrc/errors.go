@@ -18,9 +18,17 @@ type Error struct {
 	*alias
 }
 
-func (e *Error) Wrap(desc string) error { return e.alias.Wrap(desc) }
+func (e *Error) Wrap(desc string) error {
+	return e.alias.Wrap(desc)
+}
 
-func (e *Error) Wrapf(desc string, args ...interface{}) error { return e.alias.Wrapf(desc, args...) }
+func (e *Error) Wrapf(desc string, args ...interface{}) error {
+	return e.alias.Wrapf(desc, args...)
+}
+
+func (e *Error) Unwrap() error {
+	return e.alias
+}
 
 var (
 	/*
