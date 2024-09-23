@@ -9,27 +9,6 @@ import (
 
 var DefaultCodespace = "gerrc"
 
-var _ error = Error{}
-
-// necessary to make Error() pass through to the underlying impl
-type alias = errorsmod.Error
-
-type Error struct {
-	*alias
-}
-
-func (e *Error) Wrap(desc string) error {
-	return e.alias.Wrap(desc)
-}
-
-func (e *Error) Wrapf(desc string, args ...interface{}) error {
-	return e.alias.Wrapf(desc, args...)
-}
-
-func (e *Error) Unwrap() error {
-	return e.alias
-}
-
 var (
 	/*
 		Google errors
@@ -138,11 +117,11 @@ var (
 )
 
 // use this function only during a program startup phase.
-func registerAndWrap(code uint32, err error) Error {
+func registerAndWrap(code uint32, err error) *errorsmod.Error {
 	var gErr gerr.Error
 	if !errors.As(err, &gErr) {
 		panic("errs as gerr")
 	}
 	sdkerr := errorsmod.RegisterWithGRPCCode(DefaultCodespace, code, gErr.GrpcCode(), err.Error())
-	return Error{sdkerr}
+	return sdkerr
 }
